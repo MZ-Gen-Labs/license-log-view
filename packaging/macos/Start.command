@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 resources="$(cd -- "$(dirname -- "$0")" && pwd)"
-workdir="$HOME/Library/Application Support/License Log View"
+workdir="${LICENSE_LOG_VIEW_DATA_DIR:-$HOME/Library/Application Support/License Log View}"
 mkdir -p "$workdir/data"
 if [[ ! -f "$workdir/config.json" ]]; then cp "$resources/config.json" "$workdir/config.json"; fi
 for sample in "$resources"/data/*; do

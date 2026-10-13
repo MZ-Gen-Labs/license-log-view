@@ -5,6 +5,7 @@ root="$(cd -- "$(dirname -- "$0")/.." && pwd)"
 assets="$root/src/LicenseLogView/obj/project.assets.json"
 output="$root/publish/$rid/ThirdPartyNotices"
 mkdir -p "$output"
+: > "$output/VERSIONS.txt"
 cache="$(jq -r '.packageFolders | keys[0]' "$assets")"
 for component in runtime aspnetcore; do
   if [[ "$component" == runtime ]]; then

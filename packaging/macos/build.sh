@@ -65,7 +65,7 @@ binary="$installed/Contents/MacOS/LicenseLogView"
 "$binary" analyze --config "$resources/config.json" --logs "$resources/data" --out "$output"
 [[ "$(jq '.users | length' "$output/report.json")" == 50 ]]
 [[ "$(jq '.denials | length' "$output/report.json")" == 155 ]]
-HOME="$testroot/home" "$resources/Start.command" --no-browser --port 18765 > "$output/server.log" 2>&1 &
+LICENSE_LOG_VIEW_DATA_DIR="$testroot/user-data" "$resources/Start.command" --no-browser --port 18765 > "$output/server.log" 2>&1 &
 server=$!
 ready=false
 for ((i=0;i<30;i++)); do
@@ -74,5 +74,5 @@ for ((i=0;i<30;i++)); do
 done
 [[ "$ready" == true ]]
 [[ "$(jq '.users | length' "$output/http.json")" == 50 ]]
-[[ -f "$testroot/home/Library/Application Support/License Log View/config.json" ]]
+[[ -f "$testroot/user-data/config.json" ]]
 echo 'Mac package payload, analysis and local HTTP checks passed.'

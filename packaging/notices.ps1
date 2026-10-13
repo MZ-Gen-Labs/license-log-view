@@ -5,6 +5,7 @@ $assets = Get-Content "$root/src/LicenseLogView/obj/project.assets.json" -Raw | 
 $cache = @($assets.packageFolders.Keys)[0]
 $output = "$root/publish/$Rid/ThirdPartyNotices"
 New-Item -ItemType Directory -Force $output | Out-Null
+Set-Content "$output/VERSIONS.txt" -Value ""
 foreach ($component in @('runtime','aspnetcore')) {
   $package = if ($component -eq 'runtime') { "Microsoft.NETCore.App.Runtime.$Rid" } else { "Microsoft.AspNetCore.App.Runtime.$Rid" }
   $dependency = $assets.project.frameworks['net10.0'].downloadDependencies | Where-Object { $_.name -eq $package }
