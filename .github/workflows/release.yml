@@ -60,6 +60,14 @@ jobs:
         shell: bash
         run: |
           dotnet publish src/LicenseLogView/LicenseLogView.csproj -c Release -r '${{ matrix.rid }}' --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:DebugType=None -p:Version="$VERSION" -o "publish/${{ matrix.rid }}"
+      - name: Include runtime notices (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: ./packaging/notices.ps1 -Rid '${{ matrix.rid }}'
+      - name: Include runtime notices (Mac)
+        if: runner.os == 'macOS'
+        shell: bash
+        run: bash packaging/notices.sh '${{ matrix.rid }}'
       - name: Windows installer and installation test
         if: runner.os == 'Windows'
         shell: pwsh

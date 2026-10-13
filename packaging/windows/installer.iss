@@ -34,6 +34,8 @@ Source: "{#PayloadDir}\README.md"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#PayloadDir}\config.json"; DestDir: "{app}"; Flags: onlyifdoesntexist uninsneveruninstall
 Source: "{#PayloadDir}\data\*"; DestDir: "{app}\data"; Flags: onlyifdoesntexist uninsneveruninstall
 
+Source: "{#PayloadDir}\ThirdPartyNotices\*"; DestDir: "{app}\ThirdPartyNotices"; Flags: ignoreversion
+
 [Icons]
 Name: "{group}\License Log View"; Filename: "{app}\LicenseLogView.exe"; Parameters: "serve"; WorkingDir: "{app}"
 Name: "{group}\Uninstall License Log View"; Filename: "{uninstallexe}"

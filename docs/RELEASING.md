@@ -41,8 +41,10 @@ Windows Authenticode署名、Apple Developer ID署名・公証には利用者が
 
 ## ローカルでの作成
 
-Macでは本体を`osx-arm64`または`osx-x64`にpublish後、`bash packaging/macos/build.sh 0.0.1 osx-arm64`を実行します。ローカルではPKGを展開して確認し、Applicationsを変更しません。jqとmacOS標準のpkgbuild/pkgutil/codesignが必要です。
+配布物には、実際に使用した.NET/ASP.NET CoreランタイムのLICENSEと公式第三者権利表記を`ThirdPartyNotices`として同梱します。ランタイムの利用許諾と本プロジェクト自身のライセンスは別です。
 
-Windowsではwin-x64へpublish後、Inno Setup 6をインストールし、PowerShell 7から`./packaging/windows/build.ps1 -Version 0.0.1`を実行します。インストール・アンインストール検証も実行されます。
+Macでは本体を`osx-arm64`または`osx-x64`にpublish後、`bash packaging/notices.sh osx-arm64`で権利表記を取得し、`bash packaging/macos/build.sh 0.0.1 osx-arm64`を実行します。ローカルではPKGを展開して確認し、Applicationsを変更しません。jqとmacOS標準のpkgbuild/pkgutil/codesignが必要です。
+
+Windowsではwin-x64へpublish後、Inno Setup 6をインストールし、PowerShell 7から`./packaging/notices.ps1 -Rid win-x64`で権利表記を取得した後、`./packaging/windows/build.ps1 -Version 0.0.1`を実行します。インストール・アンインストール検証も実行されます。
 
 参考: [Inno Setup compiler](https://jrsoftware.org/ishelp/topic_compilercmdline.htm)、[GitHub runner images](https://github.com/actions/runner-images)、[setup-dotnet](https://github.com/actions/setup-dotnet)。
