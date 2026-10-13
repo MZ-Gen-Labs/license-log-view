@@ -1,0 +1,4 @@
+#!/bin/bash
+set -euo pipefail
+macos="$(cd -- "$(dirname -- "$0")" && pwd)"
+exec /usr/bin/open -a Terminal "$macos/../Resources/Start.command"

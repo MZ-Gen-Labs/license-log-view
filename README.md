@@ -2,6 +2,16 @@
 
 C# / .NET 10だけで、仮想ログ生成、ログ解析、ローカルブラウザ画面、CSV出力を提供します。Python、Node.js、外部JavaScriptライブラリ、クラウドサービスは利用時に不要です。画面には組み込みのHTML/JavaScriptを使用し、サーバー処理はC#です。
 
+## リリース版のダウンロード
+
+[GitHub Releases](https://github.com/MZ-Gen-Labs/license-log-view/releases)から、Windows用Inno Setupインストーラー、Mac用PKGまたはZIPを取得できます。リリース版は.NET SDK / ランタイムの追加導入不要です。MacはApple SiliconとIntelを別配布します。
+
+MacではPKGでApplicationsへインストールし、License Log View.appを開きます。Terminalとブラウザが開き、終了はTerminalでCtrl+Cです。設定とログは`~/Library/Application Support/License Log View`に保存します。ZIP版はアプリをApplicationsへ移動して使用できます。macOS 14以降を対象とします。
+
+Windowsのインストーラーは利用者のLocalAppData配下へ配置し、スタートメニューから起動できます。設定・同梱データは更新時に上書きせず、アンインストール後も残します。
+
+配布物はWindowsの発行元署名およびApple Developer ID署名・公証が未設定です。Macではアドホック署名を施しますが、OSの保護機能による確認が表示される場合があります。
+
 ## Windowsで使う
 
 1. `license-log-view-windows-x64.zip` を任意の書き込み可能なフォルダに展開します。
@@ -132,3 +142,7 @@ GitHubにはソースコード、テスト、説明資料、既知の合成サ�
 `reports`は集計時に生成されます。新たに追加するログや`data`内のファイルは原則Git対象外です。顧客の実ログや個別設定を、強制追加で公開しないでください。
 
 このプロジェクト自身の配布ライセンスは未決定です。Public公開だけでMIT等の再利用許諾を設定するものではありません。
+
+## 自動リリース
+
+[リリース手順](docs/RELEASING.md)に構成と確認範囲を記載しています。`VERSION`と本体プロジェクトの`Version`を更新してコミットし、`v0.0.1`のようなタグをpushすると、GitHub ActionsがWindows x64・Mac arm64・Mac x64でテスト、ビルド、インストーラー作成を行います。すべて成功すると、配布物とSHA-256を添付したリリースを公開します。

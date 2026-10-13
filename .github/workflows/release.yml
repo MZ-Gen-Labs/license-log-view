@@ -1,0 +1,106 @@
+name: Build and release
+
+on:
+  push:
+    tags: ['v[0-9]*']
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag (v0.0.1), or main for build verification only
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ inputs.tag || github.event.release.tag_name || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-2022
+            rid: win-x64
+          - os: macos-15
+            rid: osx-arm64
+          - os: macos-15-intel
+            rid: osx-x64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ inputs.tag || github.event.release.tag_name || github.ref_name }}
+      - uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5
+        with:
+          dotnet-version: '10.0.x'
+      - name: Validate release version
+        shell: bash
+        env:
+          TAG: ${{ inputs.tag || github.event.release.tag_name || github.ref_name }}
+        run: |
+          VERSION="$(cat VERSION | tr -d '\r\n')"
+          [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo 'Invalid VERSION'; exit 1; }
+          if [[ "$TAG" != main ]]; then
+            [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo 'Expected vMAJOR.MINOR.PATCH'; exit 1; }
+            [[ "${TAG#v}" == "$VERSION" ]] || { echo 'VERSION differs from tag'; exit 1; }
+          fi
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+      - name: Build and test
+        shell: bash
+        run: |
+          dotnet build LicenseLogView.slnx -c Release
+          dotnet tests/LicenseLogView.Tests/bin/Release/net10.0/LicenseLogView.Tests.dll
+      - name: Publish standalone binary
+        shell: bash
+        run: |
+          dotnet publish src/LicenseLogView/LicenseLogView.csproj -c Release -r '${{ matrix.rid }}' --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:DebugType=None -p:Version="$VERSION" -o "publish/${{ matrix.rid }}"
+      - name: Windows installer and installation test
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: ./packaging/windows/build.ps1 -Version $env:VERSION
+      - name: Mac app, PKG and package test
+        if: runner.os == 'macOS'
+        shell: bash
+        run: bash packaging/macos/build.sh "$VERSION" '${{ matrix.rid }}'
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: release-${{ matrix.rid }}
+          path: dist/*
+          if-no-files-found: error
+          retention-days: 7
+
+  release:
+    if: startsWith(inputs.tag || github.event.release.tag_name || github.ref_name, 'v')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ inputs.tag || github.event.release.tag_name || github.ref_name }}
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          pattern: release-*
+          path: dist
+          merge-multiple: true
+      - name: Publish all packages with checksums
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag || github.event.release.tag_name || github.ref_name }}
+        shell: bash
+        run: |
+          cd dist
+          sha256sum *.exe *.pkg *.zip > SHA256SUMS.txt
+          cd ..
+          if ! gh release view "$TAG" >/dev/null 2>&1; then
+            gh release create "$TAG" --verify-tag --draft --title "License Log View ${TAG#v}" --notes-file packaging/RELEASE_NOTES.md
+          fi
+          gh release upload "$TAG" dist/* --clobber
+          gh release edit "$TAG" --draft=false --latest

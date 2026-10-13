@@ -37,3 +37,7 @@ appsettings.*.local.json
 .idea/
 *.user
 *.suo
+
+# Release packages
+/dist/
+*.pkg

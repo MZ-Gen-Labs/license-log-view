@@ -1,5 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
+    <Version>0.0.1</Version>
     <TargetFramework>net10.0</TargetFramework><Nullable>enable</Nullable><ImplicitUsings>enable</ImplicitUsings>
     <AssemblyName>LicenseLogView</AssemblyName><AssemblyTitle>License Log View</AssemblyTitle><Product>License Log View</Product><Description>Local license usage log analysis and test log generation.</Description><RootNamespace>LicenseLogView</RootNamespace>
   </PropertyGroup>
