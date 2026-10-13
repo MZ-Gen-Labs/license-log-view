@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="src/LicenseLogView/LicenseLogView.csproj" />
+  <Project Path="tests/LicenseLogView.Tests/LicenseLogView.Tests.csproj" />
+</Solution>

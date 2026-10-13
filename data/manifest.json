@@ -1,0 +1,13 @@
+{
+  "synthetic": true,
+  "seed": 20260701,
+  "start": "2026-07-01T00:00:00",
+  "endExclusive": "2026-10-01T00:00:00",
+  "users": 50,
+  "targetUtilization": 0.8,
+  "measuredUtilization": 0.8011457164234942,
+  "demandBaseline": 23.34375,
+  "events": 23047,
+  "denied": 155,
+  "simulationStepMinutes": 5
+}

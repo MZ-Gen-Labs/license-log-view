@@ -1,0 +1,39 @@
+# Build outputs and packages
+**/bin/
+**/obj/
+/publish/
+*.exe
+*.dll
+*.pdb
+*.zip
+
+# Generated analysis and logs
+/reports*/
+/generated*/
+*.log
+
+# Only the known synthetic sample data is tracked
+/data/*
+!/data/flexlm-2026-07.log
+!/data/flexlm-2026-08.log
+!/data/flexlm-2026-09.log
+!/data/manifest.json
+!/data/truth-events.json
+!/data/audit.json
+
+# Local settings and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+config.local.json
+appsettings.*.local.json
+
+# Editor and OS files
+.DS_Store
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo

@@ -1,0 +1,14 @@
+{
+  "start": "2026-07-01", "endExclusive": "2026-10-01", "timezone": "Asia/Tokyo",
+  "businessStartHour": 9, "businessEndHour": 18, "holidays": [],
+  "smd3Capacity": 10, "vblCapacity": 200,
+  "seed": 20260701, "users": 50, "targetUtilization": 0.8,
+  "features": {
+    "SYNTH_SMD3_SE": {"product":"Solid Edge", "pool":"SMD3", "units":1},
+    "SYNTH_SMD3_NX": {"product":"NX", "pool":"SMD3", "units":3},
+    "SYNTH_VBL_SIM": {"product":"Simulation (仮)", "pool":"VBL", "units":40},
+    "SYNTH_VBL_CAM": {"product":"CAM (仮)", "pool":"VBL", "units":25},
+    "SYNTH_VBL_MBD": {"product":"MBD (仮)", "pool":"VBL", "units":15},
+    "SYNTH_VBL_ROUTING": {"product":"Routing (仮)", "pool":"VBL", "units":10}
+  }
+}
